@@ -105,7 +105,6 @@ export default {
       		"totalfee":this.allPrice,
       		"startTime":dingdanTime,
           "openid":this.openid,
-      		// "openid":'oYYPb0kX_sUAABZZF879tq9vYS44',
           "url":window.location.href,
       };
       console.log("paymentopenid是" + this.openid);
@@ -120,37 +119,25 @@ export default {
               //请求成功时处理
               // wexinPay(req);
               // alert("请求后台成功");
-              alert(JSON.stringify(req) + "payment请求数据成功");
               console.log("请求的数据成功");
-              // console.log(req);
+              alert(JSON.stringify(req) + "payment数据");
               _this.onBridgeReady(req);        
           },
       });
     },
    onBridgeReady:function(data){
-       console.log("请求成功+++++");
-       console.log(data); 
-       var newdata = {
-              "appId":data.appId,     //公众号名称，由商户传入     
+       console.log(data);
+       console.log("开始WeixinJSBridge");
+       WeixinJSBridge.invoke(
+           'getBrandWCPayRequest', {
+               "appId":data.appId,     //公众号名称，由商户传入     
+               // "appId":'wx88cb890e1e079473',     //公众号名称，由商户传入     
                "timeStamp":data.timeStamp,         //时间戳，自1970年以来的秒数     
                "nonceStr":data.nonceStr,//随机串     
                "package":data.package,     
                "signType":"MD5",         //微信签名方式：     
                "paySign":data.sign//微信签名 
-       }
-       console.log(newdata);
-       console.log("上面是newdata");
-       WeixinJSBridge.invoke(
-           // 'getBrandWCPayRequest', {
-           //     "appId":data.appId,     //公众号名称，由商户传入     
-           //     // "appId":'wx88cb890e1e079473',     //公众号名称，由商户传入     
-           //     "timeStamp":data.timeStamp,         //时间戳，自1970年以来的秒数     
-           //     "nonceStr":data.nonceStr,//随机串     
-           //     "package":data.package,     
-           //     "signType":"MD5",         //微信签名方式：     
-           //     "paySign":data.sign//微信签名 
-           // },
-          'getBrandWCPayRequest',newdata,
+           },
            function(res){     
                 console.log(JSON.stringify(res) + '------------');
                if(res.err_msg == "get_brand_wcpay_request:ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
@@ -173,7 +160,8 @@ export default {
     this.profit = this.$route.query.profit;
 
     this.openid = localStorage.getItem("openid");//取本地存储
-    // alert("localStorage + openid是" + this.openid);
+    // this.openid = 'oYYPb0kX_sUAABZZF879tq9vYS44';
+
     console.log(this.openid);
     // alert(window.location.href + '111111111');
     // alert(window.location.href.split('#')[0] + '22222222');
