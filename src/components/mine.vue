@@ -1,8 +1,8 @@
 <template>
   <div class="mine" style="height: 100%;background: #F4F4F4;">
       <div class="head">
-          <div class="headImg"><img src="../../static/img/headimg.png" alt=""></div>
-          <div class="name">Type something</div>
+          <div class="headImg"><img :src="headimgurl" alt=""></div>
+          <div class="name">{{nickname}}</div>
           <div class="service"><img src="../../static/img/service.png" alt=""><br><span>客服</span></div>
       </div>
       <div class="mineLists">
@@ -18,23 +18,123 @@
 
 <script>
 import $ from "jquery";
+import apiUrls from '../apiUrls'
 export default {
   name: 'mine',
   data () {
     return {
-
+      mineOpenid:"",
+      headimgurl:"",
+      nickname:"",
+      code:""
     }
   },
   created:function(){
-    // bus.$on("info",function(a){
-    //   console.log(a);
-    //   bus.$off("info");
-    // })
-    alert(window.location.href);
+    　 // 使用方法：url转为对象
+    if (!localStorage.getItem("firstTime")) {//无 第一次进入
+        var url = window.location.href.split('#')[0];
+        var obj = this.parseQueryString(url);
+        if (!obj.code) {
+          console.log('没code');
+           var appid="wx88cb890e1e079473";
+           var redirect_uri=encodeURIComponent("http://ch.jwangkun.com/24h/#/mine");//这里的地址需要http://
+           var wurl='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+ appid +'&redirect_uri='+ redirect_uri +'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';          
+           window.location.href=wurl;
+           return;
+        }else{             
+            if (!sessionStorage.getItem("sessfirstTime")) {//没
+                console.log("没sess");
+                this.code = obj.code;  
+                this.mineAjax();
+            }else{//有 返回的时候已经有sessionStoragegetItem("sessfirstTime")
+                console.log("有sess");
+                var strsessUserinfo = sessionStorage.getItem("sessfirstTime");
+                var sessuserInfo = JSON.parse(strsessUserinfo);
+                this.headimgurl = sessuserInfo.headimgurl;
+                this.nickname = sessuserInfo.nickname;
+            }       
+        };     
+    }else{//有 刷新的时候已经有localStorage.getItem("firstTime")
+        var strUserinfo = localStorage.getItem("firstTime");
+        var userInfo = JSON.parse(strUserinfo);
+        this.headimgurl = userInfo.headimgurl;
+        this.nickname = userInfo.nickname;
+    }
+     
+// ................
+
+    // this.mineOpenid = "oYYPb0kX_sUAABZZF879tq9vYS44";
+    // this.mineAjax();  
+    
   },
   mounted () {
-    // document.title = '我的';
+    
   },
+  methods:{
+    mineAjax(){
+       console.log("mineAjax开始");
+       var _this = this;
+       // var openid = {"openID":this.mineOpenid};
+       var code = {code:this.code};
+       $.ajax({
+        url:apiUrls['minePage'],    //请求的url地址
+        dataType:"json",   //返回格式为json
+        async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
+        data:code,  
+        type:"post",   //请求方式
+        success:function(req){     
+              console.log(req);       
+              _this.headimgurl = req.headimgurl;
+              _this.nickname = req.nickname;
+              localStorage.setItem("firstTime",JSON.stringify(req));  
+              sessionStorage.setItem("sessfirstTime",JSON.stringify(req));
+          },
+      });
+    },
+    // .......
+    //   getOpenid:function(){  
+    //   console.log("请求openid");
+    //   var _this = this;
+    //   var code = {'code':this.code}
+    //   $.ajax({
+    //   url:apiUrls['homeGetopenid'],
+    //   async:true,//请求是否异步，默认为异步，这也是ajax重要特性 
+    //   type:"post",     //请求方式
+    //   data:code,
+    //   success:function(req){
+    //       //请求成功时处理
+    //        _this.mineOpenid = req.openid;        
+    //        localStorage.setItem("openid",_this.mineOpenid);//存openid  
+    //        // mineAjax
+    //       console.log('openid是local' + localStorage.getItem("openid"));
+    //   },
+    //   error:function(err){
+    //       //请求出错处理
+    //       console.log('失败' + JSON.stringify(err));
+
+    //   }
+    //   });
+    // },
+// .................
+      parseQueryString:function (url) {  //url 转为对象
+          var reg_url = /^[^\?]+\?([\w\W]+)$/,
+                  reg_para = /([^&=]+)=([\w\W]*?)(&|$)/g, //g is very important
+                  arr_url = reg_url.exec(url),
+                  ret = {};
+          if (arr_url && arr_url[1]) {
+              var str_para = arr_url[1], result;
+              while ((result = reg_para.exec(str_para)) != null) {
+                  ret[result[1]] = result[2];
+              }
+          }
+          return ret;
+    },
+// ...............
+
+  },
+  destroyed:function(){
+    localStorage.removeItem('firstTime');
+  }
 }
 </script>
 
@@ -112,4 +212,6 @@ export default {
   width: 60%;
   text-align: right;
 }
+
+
 </style>

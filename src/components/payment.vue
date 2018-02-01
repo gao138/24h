@@ -23,7 +23,15 @@
         <div class="footer">
               <div><span>合计￥{{allPrice}}&nbsp&nbsp&nbsp&nbsp</span><span @click="payOk()">确认付款</span></div>
         </div>
-      </div>  
+      </div> 
+      <!-- 模板 -->
+      <div class="mould">
+          <div class="paySuccess">
+              <div class="paySuccess-title">支付成功</div>
+              <div class="paySuccess-money">￥{{allPrice}}</div>
+              <router-link to="/coffeemachine"><div class="paySuccess-btn"><button>确定</button></div></router-link>
+          </div>
+      </div>
   </div>
 </template>
 <script>
@@ -53,11 +61,13 @@ export default {
         $(event.target).attr("checked",true);
         $(event.target).attr("src",xuanImg);
         _this.isSelected = {isSelected:true,payWay:event.target};
+        console.log(_this.isSelected);
       }else{
         console.log("取消");
         var noxuanImg = require("../../static/img/noxuan.png");
         $(event.target).attr("checked",false);
         $(event.target).attr("src",noxuanImg);
+        _this.isSelected.isSelected = false;
       }
     },
     weixinConfig:function(){
@@ -108,7 +118,7 @@ export default {
           "url":window.location.href,
       };
       console.log("paymentopenid是" + this.openid);
-      alert("请求开始");
+      // alert("请求开始");
      	 $.ajax({
         url:apiUrls['paymentpage'],    //请求的url地址
         dataType:"json",   //返回格式为json
@@ -120,12 +130,13 @@ export default {
               // wexinPay(req);
               // alert("请求后台成功");
               console.log("请求的数据成功");
-              alert(JSON.stringify(req) + "payment数据");
+              // alert(JSON.stringify(req) + "payment数据");
               _this.onBridgeReady(req);        
           },
       });
     },
    onBridgeReady:function(data){
+        var _this = this;
        console.log(data);
        console.log("开始WeixinJSBridge");
        WeixinJSBridge.invoke(
@@ -140,7 +151,9 @@ export default {
            },
            function(res){     
                 console.log(JSON.stringify(res) + '------------');
-               if(res.err_msg == "get_brand_wcpay_request:ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+               if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                  $(".mould").show();
+               };     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
            }
        ); 
     }
@@ -269,5 +282,55 @@ export default {
     color: #613F05;
     background: #EFDCBB;
   }
-
+  
+  .mould{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(12,12,12,0.50);
+  display: none;
+}
+.paySuccess{
+  width: 67.7%;
+  height: 19%;
+  background: #FFFFFF;
+  border-radius: 0.37333333rem;
+  position: absolute;
+  top: 34.9%;
+  left:0;
+  right: 0;
+  bottom:46%;
+  margin: auto;
+}
+.paySuccess-title,.paySuccess-money,.paySuccess-btn{
+  text-align: center;
+}
+.paySuccess-title{
+  font-family: PingFangSC-Light;
+  font-size: 0.3466667rem;
+  color: #3D3D3D;
+  margin-top: 0.5rem;
+}
+.paySuccess-money{
+  font-family: PingFangSC-Medium;
+  font-size: 0.6666667rem;
+  color: #3D3D3D;
+}
+.paySuccess-btn{
+  width: 100%;
+  margin-top: 0.1rem;
+}
+.paySuccess-btn button{
+  width: 33.1%;
+  height: 0.6133333rem;
+  line-height: 0.6133333rem;
+  background: #EFDCBB;
+  border-radius: 0.3733333rem;
+  border: none;
+  font-family: PingFangSC-Regular;
+  font-size: 0.346666667rem;
+  color: #3D3D3D;
+}
 </style>

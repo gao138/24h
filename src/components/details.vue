@@ -1,5 +1,5 @@
 <template>
-  <div class="details" style="height: 100%;">
+  <div class="details" style="height: 100%;display: none;">
      <div class="order">  
        <span style="white-space:pre;"></span><span class="line" style="vertical-align: 6%;margin-right: 3%"></span>  
        <span style="white-space:pre;"></span><span class="txt">{{detailsRegion}}</span>  
@@ -15,11 +15,11 @@
      <div class="smallTtle">购买量</div>
      <div class="manNum">
         <div style="border-bottom: 1px solid #DFDFDF;"><span>限购买份额</span><span class="aplces">{{onlyOneList['aplces']}}</span></div>
-        <div style="border-bottom: 1px solid #DFDFDF;"><span>已购买份额</span><span class="laplces">{{onlyOneList['laplces']}}</span></div>
+        <div style="border-bottom: 1px solid #DFDFDF;"><span>已购买份额</span><span class="laplces">{{parseInt(onlyOneList['laplces'])+parseInt(productNum)}}</span></div>
         <div style="border-bottom: 1px solid #DFDFDF;"><span>剩余份额</span><span class="residue">{{parseInt(onlyOneListlaplces)-parseInt(productNum)}}</span></div>
         <div style="border-bottom: 1px solid #DFDFDF;"><span>购买份额</span><span><div class="add"><span><img src="../../static/img/del.png" alt="" @click="del()"></span> <span>{{productNum}}</span> <span><img src="../../static/img/add.png" alt=""  @click="add()"></span></div></span></div>
         <div><span>购买日期</span><span>{{payTime}}</span></div>
-        <div><span>收益日期</span><span>{{profit}}</span></div>
+        <!-- <div><span>收益日期</span><span>{{profit}}</span></div> -->
      </div>
      <div class="prompt">
           <span>每人限购十个名额哦！<br>可在不同区域的大学分别购买</span>
@@ -51,7 +51,7 @@ export default {
       numToCont:"",
       onlyOneListname:'',
       onlyOneListlaplces:0,
-      isSelectedmachine:false//是否选择了机器
+      isSelectedmachine:false,//是否选择了机器
     }
   },
   methods:{
@@ -166,9 +166,10 @@ export default {
         success:function(req){
             //请求成功时处理
             console.log(req);
-            _this.detailsList = req; 
-            setTimeout(function(){//swiper
+            _this.detailsList = req;   
+            setTimeout(function(){
                 _this.weixinPay(0);//初始化样式
+                $(".details").show();
             },100);       
         },
         error:function(){

@@ -14,7 +14,7 @@
               </div>
             </div>
         </div>
-        <div class="content">
+        <div class="content" style="background: #000000;">
              <div class="homebg">
                 <img src="../../static/img/bg.png" alt="">
                 <div class="cont-all">
@@ -196,10 +196,9 @@ export default {
                   freeMode:true,
                   width: window.innerWidth,
               })
-              _this.createdcss();
+              _this.createdcss();//初始化样式
           },100);
            _this.region = _this.headList[0]['name']; //初始化地区
-           $(".page").show();
       },
       error:function(){
           //请求出错处理
@@ -208,7 +207,7 @@ export default {
     }
   },
   created:function(){   
-  　　//使用方法：url转为对象
+  　　 // 使用方法：url转为对象
       var url = window.location.href.split('#')[0];
       var obj = this.parseQueryString(url);
       if (!obj.code) {
@@ -224,18 +223,21 @@ export default {
           if (sessionStorage.getItem("ishasCode") == "ok") {//有
               console.log('有session');
               console.log("session是" + sessionStorage.getItem("ishasCode"));
+               this.openid = localStorage.getItem("openid");
+               this.$ajaxjson(); 
           }else{//没有
             console.log('没有session');
             console.log("session是" + sessionStorage.getItem("ishasCode"));
-            sessionStorage.setItem('ishasCode','ok')
-            this.getOpenid();
+            sessionStorage.setItem('ishasCode','ok')  
+               this.getOpenid();//获取openid  
+               this.$ajaxjson();         
           };        
-      }; 	
+      };     
   },	
   mounted(){
-    // 请求home头部数据
-    this.$ajaxjson();
-   },
+       // 请求home头部数据
+       
+  }
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -345,9 +347,9 @@ export default {
     right: 0;
     margin: auto;
   }
-  .page{
+ /* .page{
     display: none;
-  }
+  }*/
  
 
 
