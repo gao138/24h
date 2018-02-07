@@ -14,7 +14,7 @@
               </div>
             </div>
         </div>
-        <div class="content" style="background: #000000;">
+        <div class="content" style="background: #7f7f7f;">
              <div class="homebg">
                 <img src="../../static/img/bg.png" alt="">
                 <div class="cont-all">
@@ -23,10 +23,13 @@
                             <div class="tp" v-if="item.way">
                                 <p><button style="-webkit-tap-highlight-color:transparent;" @click="jump(item.title)">查看</button></p>
                                 <p>{{item.title}}</p>
+                                <img src="../../static/img/redflag.png" alt="" v-if="item.flag">
                             </div>
                             <div class="bt" v-else>
+                                 <p><button style="-webkit-tap-highlight-color:transparent;" @click="jump(item.title)">查看</button>
                                  <p>{{item.title}}</p>
-                                <p><button style="-webkit-tap-highlight-color:transparent;" @click="jump(item.title)">查看</button></p>
+                                 <img src="../../static/img/redflag.png" alt="" v-if="item.flag">
+                                </p>
                             </div>
                         </div>                    
                     </div>
@@ -44,21 +47,21 @@
   </div>
 </template>
 <script>
-var allArea =  [
-          {positions:'top:35.4%;left:12.9%',title:"",way:true},
-          {positions:'top:2.9%;left:24.4%',title:"",way:true},
-          {positions:'top:7.9%;left:55%',title:"",way:false},
-          {positions:'top:82.9%;left:14.7%',title:"",way:false},
-          {positions:'top:37.9%;left:61.7%',title:"",way:false},
-          {positions:'top:95.9%;left:52.7%',title:"",way:false},
-          {positions:'top:77.9%;left:86.7%',title:"",way:false},
-          {positions:'top:23.9%;left:93%',title:"",way:true},
-          {positions:'top:8.9%;left:72.7%',title:"",way:true},
-          {positions:'top:34.9%;left:84.7%',title:"",way:false},
-          {positions:'top:67.9%;left:49%',title:"",way:false},
-          {positions:'top:40.9%;left:25.7%',title:"",way:false},
-          {positions:'top:-3.1%;left:50%',title:"",way:true},
-        ];
+// var allArea =  [
+//           {positions:'top:35.4%;left:12.9%',title:"",way:true},
+//           {positions:'top:2.9%;left:24.4%',title:"",way:true},
+//           {positions:'top:7.9%;left:55%',title:"",way:false},
+//           {positions:'top:82.9%;left:14.7%',title:"",way:false},
+//           {positions:'top:37.9%;left:61.7%',title:"",way:false},
+//           {positions:'top:95.9%;left:52.7%',title:"",way:false},
+//           {positions:'top:77.9%;left:86.7%',title:"",way:false},
+//           {positions:'top:23.9%;left:93%',title:"",way:true},
+//           {positions:'top:8.9%;left:72.7%',title:"",way:true},
+//           {positions:'top:34.9%;left:84.7%',title:"",way:false},
+//           {positions:'top:67.9%;left:49%',title:"",way:false},
+//           {positions:'top:40.9%;left:25.7%',title:"",way:false},
+//           {positions:'top:-3.1%;left:50%',title:"",way:true},
+//         ];
 import $ from 'jquery'
 import apiUrls from '../apiUrls'
 export default {
@@ -67,7 +70,7 @@ export default {
     return {
       headList:"",
       areaList:"",
-      albumpic_big:require("../../static/img/one.png"), 
+      albumpic_big:"", 
       region:"",
       code:"",
       openid:"",
@@ -92,14 +95,9 @@ export default {
           $(".bottomImg").eq(index).hide(); 
         }
       })
-      if (item['list'].length >= 7) {
-        this.albumpic_big = require("../../static/img/one.png");
-      }else{
-        this.albumpic_big = require("../../static/img/two.png");
-      }
+      this.getalbumpic_big(this.headList);
       this.region = item['name']; 
-      // console.log(this.getRandomArray(item.list.length,allArea.length-1));
-      this.areaList = this.setSpot(this.getRandomArray(item.list.length,allArea.length-1),areaNum);  
+      this.gethomeUniversity(this.region);//tab切换显示点
      }    
     }, 
     jump:function(t){
@@ -169,21 +167,47 @@ export default {
           }
           return ret;
     },
-    $ajaxjson:function(){
+    gethomeUniversity:function(areaName){
+          var _this = this;
+          $.ajax({
+            url:apiUrls['homeUniversity'], //请求的url地址
+            dataType:"json",   //返回格式为json
+            async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
+            type:"post",   //请求方式
+            data:{name:areaName},
+            success:function(req){
+              console.log("gethomeUniversity下面");
+              console.log(req);
+              _this.areaList = req;
+              _this.getalbumpic_big(req);
+            },
+            error:function(){
+                //请求出错处理
+            }
+          });
+    },
+    getalbumpic_big:function(item){
+      if (item.length > 7) {
+        this.albumpic_big = require("../../static/img/one.png");
+      }else{
+        this.albumpic_big = require("../../static/img/two.png");
+      }
+    },
+    $ajaxjson:function(areaName){
       var _this = this;   
       $.ajax({
       url:apiUrls['homePage'], //请求的url地址
       dataType:"json",   //返回格式为json
-      async:true,//请求是否异步，默认为异步，这也是ajax重要特性 
+      async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
       type:"post",   //请求方式
       success:function(req){
-
           //请求成功时处理
           console.log(req);    
           _this.headList = req;  
+          _this.region = req[0]['name'];
           //初始化学校显示
-          _this.areaList = _this.setSpot(_this.getRandomArray(_this.headList[0]['list'].length,allArea.length-1),0);  
-          //head轮播 
+          // _this.areaList = _this.setSpot(_this.getRandomArray(_this.headList[0]['list'].length,allArea.length-1),0);  
+          //head轮播的长度 
           var headNum =  0;
           if (_this.headList.length >= 5) {
             headNum = 5;
@@ -198,14 +222,13 @@ export default {
               })
               _this.createdcss();//初始化样式
           },100);
-           _this.region = _this.headList[0]['name']; //初始化地区
-      },
-      error:function(){
-          //请求出错处理
+
+           // _this.region = _this.headList[0]['name']; //初始化地区
       }
       });
     }
   },
+
   created:function(){   
   　　 // 使用方法：url转为对象
       var url = window.location.href.split('#')[0];
@@ -225,12 +248,14 @@ export default {
               console.log("session是" + sessionStorage.getItem("ishasCode"));
                this.openid = localStorage.getItem("openid");
                this.$ajaxjson(); 
+               this.gethomeUniversity(this.region);     
           }else{//没有
             console.log('没有session');
             console.log("session是" + sessionStorage.getItem("ishasCode"));
             sessionStorage.setItem('ishasCode','ok')  
                this.getOpenid();//获取openid  
-               this.$ajaxjson();         
+               this.$ajaxjson();   
+               this.gethomeUniversity(this.region);      
           };        
       };     
   },	
@@ -315,37 +340,54 @@ export default {
     position: absolute;
     width: 4.5rem;
     height: 1.6rem;
-    top: -1.08rem;
+    top: -0.6rem;
     left: -2.1rem;
     bottom: 0;
     right: 0;
     margin: auto;
 
   }
-  .tp p:nth-child(1) button,.bt p:nth-child(2) button{
+  .tp p:nth-child(1),.bt p:nth-child(1){
+      height: 0.6rem;
+  }
+  .tp p:nth-child(1) button,.bt p:nth-child(1) button{
     width: 1.36rem;
     border: none;
-    height: 0.42666666rem;
     background: #FF6D6D;
     border-radius: 0.16rem;
     ont-family: PingFangSC-Medium;
     font-size: 0.2666667rem;
     color: #FFFFFF;
+    line-height: 0.5rem;
   }
-  .tp p:nth-child(2),.bt p:nth-child(1){
+  .tp p:nth-child(2),.bt p:nth-child(2){
     font-family: PingFangSC-Medium;
     font-size: 0.2666667rem;
     color: #FFFFFF;
+  }
+  .tp img{
+    width: 20%;
+    height: 80%;
+    position: absolute;
+    top: -68%;
+    left: 43%;
   }
   .bt{
     position: absolute;
     width: 4.5rem;
     height: 1.6rem;
-    top: 1.8rem;
+    top: 1.7rem;
     left: -2.1rem;
     bottom: 0;
     right: 0;
     margin: auto;
+  }
+  .bt img{
+    width: 20%;
+    height: 72%;
+    position: absolute;
+    top: -62%;
+    left: 43%;
   }
  /* .page{
     display: none;
@@ -356,7 +398,7 @@ export default {
     .header{
       width:100%;
       text-align:center;
-      /*background-color: red;*/
+      background-color: #fff;
     }
 
     /*flex最外框*/

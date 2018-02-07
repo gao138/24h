@@ -9,10 +9,10 @@
                </div> 
                <div class="saleNum">
                   <div style="border-bottom: 1px solid #DFDFDF;"><span>{{paySchool}}咖啡机</span><span>{{productNum}}份</span></div>
-                  <div style="border-bottom: 1px solid #DFDFDF;"><span>金额</span><span>{{payPrice}}</span></div>
-                  <div style="border-bottom: 1px solid #DFDFDF;"><span>月收益</span><span>约150元</span></div>
+                  <div style="border-bottom: 1px solid #DFDFDF;"><span>金额</span><span>{{payPrice}}/1份</span></div>
+                  <div style="border-bottom: 1px solid #DFDFDF;"><span>月收益</span><span>约150元/1份</span></div>
                   <div style="border-bottom: 1px solid #DFDFDF;"><span>购买日期</span><span>{{payTime}}</span></div>
-                  <div style="border-bottom: 1px solid #DFDFDF;"><span>收益日期</span><span>{{profit}}</span></div>
+                  <!-- <div style="border-bottom: 1px solid #DFDFDF;"><span>收益日期</span><span>{{profit}}</span></div> -->
                   <!-- <div><span>月收入</span><span>100元起</span></div> -->
                </div>
                <div class="pay">
@@ -29,8 +29,21 @@
           <div class="paySuccess">
               <div class="paySuccess-title">支付成功</div>
               <div class="paySuccess-money">￥{{allPrice}}</div>
-              <router-link to="/coffeemachine"><div class="paySuccess-btn"><button>确定</button></div></router-link>
+              <router-link :to="{path:'coffeemachine',query:{openid:openid}}"><div class="paySuccess-btn"><button>确定</button></div></router-link>
           </div>
+      </div>
+      <div class="Agreement">
+        <div class="Agreement-con">
+            <div class="Agreement-title">24咖啡服务协议</div>
+            <div class="Agreement-content">
+                <div class="Agreement-content-con">
+                    <img src="../../static/img/agreecont.png" alt="">
+                </div>
+            </div>
+            <div class="Agreement-btn">
+              <span @click="isAgree('agree')">同意</span><span @click="isAgree('noagree')">不同意</span>
+            </div>
+        </div>
       </div>
   </div>
 </template>
@@ -50,6 +63,7 @@ export default {
         allPrice:"",//总价格
         isSelected:"",//是否选择了支付方式
         openid:"",//openid
+        btnAgree:"",//点击同意，不同意
     }
   },
   methods:{
@@ -75,7 +89,6 @@ export default {
           "url":window.location.href.split('#')[0],
           }
         $.ajax({
-              // url:'http://192.168.1.101:8080/eh/ycb/wxpay/config.do',    //请求的url地址
               url:apiUrls['paymentpageConfig'],    //请求的url地址
               dataType:"json",   //返回格式为json
               async:true,//请求是否异步，默认为异步，这也是ajax重要特性 
@@ -101,8 +114,11 @@ export default {
     },
     payOk:function(){
       var _this = this;
-      var a = new Date();
-      var dingdanTime =  a.getFullYear()+ "年"+(a.getMonth()+1)+"月"+a.getDate() + "日"+ a.getHours()+ '时'+ a.getMinutes()+ '分'+ a.getSeconds() + '秒';
+      if (!this.btnAgree === true) {
+        // alert("请点击同意协议");
+        $(".Agreement").show();
+        return;
+      }
       if (!this.isSelected.isSelected) {
         alert("勾选付款方式");
         return;
@@ -113,9 +129,8 @@ export default {
       		"mach":this.onlyOneListname,
       		"num":this.productNumAlbo,
       		"totalfee":this.allPrice,
-      		"startTime":dingdanTime,
           "openid":this.openid,
-          "url":window.location.href,
+          // "openid":"oYYPb0gIcCPq0IDh_fedDoJRavJU",
       };
       console.log("paymentopenid是" + this.openid);
       // alert("请求开始");
@@ -156,21 +171,30 @@ export default {
                };     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
            }
        ); 
+    },
+    isAgree(isAgreebtn){
+      console.log(isAgreebtn);
+      $(".Agreement").hide();
+      if (isAgreebtn ==="agree") {
+          this.btnAgree = true;
+      }else if (isAgreebtn ==="noagree"){
+          this.btnAgree = false;
+      }
     }
 
   },
   created:function(){
   //参数
-    this.paySchool = this.$route.query.topay;
-    this.payPrice = this.$route.query.price;
-    this.payTime = this.$route.query.payTime;
-    this.productNum = this.$route.query.numToCont;
-    this.productNumAlbo = this.$route.query.num;
-    this.allPrice = this.$route.query.num*this.payPrice;
-    this.detailsRegion = this.$route.query.detailsRegion;
+    this.paySchool = this.$route.query.topay;//学校
+    this.payPrice = this.$route.query.price;//支付价格
+    this.payTime = this.$route.query.payTime;//支付时间
+    this.productNum = this.$route.query.numToCont;//中文数字
+    this.productNumAlbo = this.$route.query.num;//数量阿拉伯数字
+    this.allPrice = this.$route.query.num*this.payPrice;//总价
+    this.detailsRegion = this.$route.query.detailsRegion;//地区
     this.onlyOneList = this.$route.query.onlyOneList;
-    this.onlyOneListname = this.$route.query.onlyOneListname;
-    this.profit = this.$route.query.profit;
+    this.onlyOneListname = this.$route.query.onlyOneListname;//机器型号
+    this.profit = this.$route.query.profit;//收益日期
 
     this.openid = localStorage.getItem("openid");//取本地存储
     // this.openid = 'oYYPb0kX_sUAABZZF879tq9vYS44';
@@ -282,8 +306,8 @@ export default {
     color: #613F05;
     background: #EFDCBB;
   }
-  
-  .mould{
+  /*支付成功和协议模板*/
+  .mould,.Agreement{
   width: 100%;
   height: 100%;
   position: absolute;
@@ -292,6 +316,7 @@ export default {
   background: rgba(12,12,12,0.50);
   display: none;
 }
+/*协议*/
 .paySuccess{
   width: 67.7%;
   height: 19%;
@@ -332,5 +357,61 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 0.346666667rem;
   color: #3D3D3D;
+}
+.Agreement-con{
+  width: 74.5%;
+  height: 9rem;
+  background: #FFFFFF;
+  border-radius: 0.3733333333rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  overflow:hidden;
+}
+.Agreement-title{
+  font-family: PingFangSC-Medium;
+  font-size: 0.4rem;
+  color: #3A3A3A;
+  line-height: 1rem;
+  margin-top: 0.3rem;
+}
+.Agreement-content{
+  width: 100%;
+  margin:  auto;
+}
+.Agreement-content-con{
+  height: 6.5rem;
+  overflow-y: auto;
+  font-family: PingFangSC-Regular;
+  font-size: 0.32rem;
+  color: #5E5E5E;
+  text-align: left;
+}
+.Agreement-content-con img{
+  width: 100%;
+}
+.Agreement-btn>span{
+    text-align: center;
+    display:inline-block;
+    width: 50%;
+    background: #FFFFFF;
+    height: 100%;
+    line-height: 1.2rem;
+}
+.Agreement-btn>span:nth-child(1){
+  font-family: PingFangSC-Regular;
+  font-size: 0.3466667rem;
+  color: #6B4A12;
+  border-top: 1px solid #D3D3D3;
+  border-right: 1px solid #D3D3D3;
+}
+.Agreement-btn>span:nth-child(2){
+  font-family: PingFangSC-Regular;
+  font-size: 0.3466667rem;
+  color: #A4A4A4;
+  border-top: 1px solid #D3D3D3;
 }
 </style>

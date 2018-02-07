@@ -1,34 +1,55 @@
 <template>
   <div class="coffeemachine" style="height: 100%;">
-     <div class="order">  
-       <span style="white-space:pre;"></span><span class="line" style="vertical-align: 6%;margin-right: 3%"></span>  
-       <span style="white-space:pre;"></span><span class="txt">朝阳区</span>  
-       <span style="white-space:pre;"></span><span class="line" style="vertical-align: 6%;margin-left: 3%"></span>  
-     </div> 
-     <div class="specifications">
-      <div class="specifications-cont">
-        <div><span>北京联合大学咖啡机</span><span>1份</span></div>
-        <div><span>2018年2月8日购买</span><span></span></div>
-        <div><span>2018年3月8日收益</span><span>已收益</span></div>
-      </div>
-     </div>
+    <div class="myCoffeemachine" v-for="item in myCoffeemachine">
+       <div class="order">  
+         <span style="white-space:pre;"></span><span class="line" style="vertical-align: 6%;margin-right: 3%"></span>  
+         <span style="white-space:pre;"></span><span class="txt">{{item.area}}</span>  
+         <span style="white-space:pre;"></span><span class="line" style="vertical-align: 6%;margin-left: 3%"></span>  
+       </div> 
+       <div class="specifications" v-for="itemCont in item.data">
+        <div class="specifications-cont">
+          <div><span>{{itemCont.unit}}咖啡机</span><span>{{itemCont.money}}元/{{itemCont.num}}份</span></div>
+          <div><span>{{itemCont.paytime}}</span><span></span></div>
+          <!-- <div><span>2018年3月8日收益</span><span>已收益</span></div> -->
+        </div>
+       </div>
+    </div>
   </div>
 </template>
 
 <script>
 import $ from 'jquery'
+import apiUrls from "../apiUrls"
 export default {
   name: 'coffeemachine',
   data () {
     return {
-
+      coffeemachineOpenid:"",
+      myCoffeemachine:"",
     }
   },
   methods:{
-    
+    coffeemachineAjax(openid){
+        var _this = this;
+        $.ajax({
+            url:apiUrls['coffeemachinePage'],    //请求的url地址
+            dataType:"json",   //返回格式为json
+            async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
+            // data:{openID:"oYYPb0gIcCPq0IDh_fedDoJRavJU"},  
+            data:{openID:openid},  
+            type:"post",   //请求方式
+            success:function(req){     
+              console.log("coffeemachineAjax是下面"); 
+              console.log(req);
+              _this.myCoffeemachine = req;
+            },
+        });
+    },
   },
   created:function(){
-    
+     this.coffeemachineOpenid = this.$route.query.openid;//路径拿oenid
+     // console.log("coffeemachineOpenid是" + this.coffeemachineOpenid);
+     this.coffeemachineAjax(this.coffeemachineOpenid);
   },
   mounted:function(){
     

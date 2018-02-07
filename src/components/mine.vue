@@ -3,14 +3,14 @@
       <div class="head">
           <div class="headImg"><img :src="headimgurl" alt=""></div>
           <div class="name">{{nickname}}</div>
-          <div class="service"><img src="../../static/img/service.png" alt=""><br><span>客服</span></div>
+          <!-- <div class="service"><img src="../../static/img/service.png" alt=""><br><span>客服</span></div> -->
       </div>
       <div class="mineLists">
-          <router-link to="/coffeemachine">
-              <div class="mineList"><span>我的咖啡机</span><span>共3份</span></div>
+          <router-link :to="{path:'coffeemachine',query:{openid:mineOpenid}}">
+              <div class="mineList"><span class="myCofee">我的咖啡机</span><span>共{{MineCoffNum}}份</span></div>
           </router-link>
           <router-link to="/mywallet">
-              <div class="mineList"><span>我的钱包</span><span></span></div>
+              <div class="mineList"><span class="myWallet">我的钱包</span><span></span></div>
           </router-link>
       </div>
   </div>
@@ -26,7 +26,8 @@ export default {
       mineOpenid:"",
       headimgurl:"",
       nickname:"",
-      code:""
+      code:"",
+      MineCoffNum:"",
     }
   },
   created:function(){
@@ -52,6 +53,8 @@ export default {
                 var sessuserInfo = JSON.parse(strsessUserinfo);
                 this.headimgurl = sessuserInfo.headimgurl;
                 this.nickname = sessuserInfo.nickname;
+                this.mineOpenid = sessuserInfo.openid;
+                this.MineCoffNum = sessuserInfo.cofNum;
             }       
         };     
     }else{//有 刷新的时候已经有localStorage.getItem("firstTime")
@@ -59,13 +62,14 @@ export default {
         var userInfo = JSON.parse(strUserinfo);
         this.headimgurl = userInfo.headimgurl;
         this.nickname = userInfo.nickname;
+        this.mineOpenid = sessuserInfo.openid;
+        this.MineCoffNum = sessuserInfo.cofNum;
     }
      
 // ................
 
     // this.mineOpenid = "oYYPb0kX_sUAABZZF879tq9vYS44";
     // this.mineAjax();  
-    
   },
   mounted () {
     
@@ -82,15 +86,35 @@ export default {
         async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
         data:code,  
         type:"post",   //请求方式
-        success:function(req){     
+        success:function(req){   
+              console.log("mineAjax请求成功");         
               console.log(req);       
               _this.headimgurl = req.headimgurl;
               _this.nickname = req.nickname;
+              _this.mineOpenid = req.openid;
+              _this.MineCoffNum = req.cofNum;    
               localStorage.setItem("firstTime",JSON.stringify(req));  
               sessionStorage.setItem("sessfirstTime",JSON.stringify(req));
+              // 
           },
       });
     },
+    // getMineCoffNum(openid){
+    //    var _this = this;
+    //    $.ajax({
+    //     url:apiUrls['minePageCoffNum'],    //请求的url地址
+    //     dataType:"json",   //返回格式为json
+    //     async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
+    //     data:{openID:openid},  
+    //     // data:{openID:"oYYPb0kX_sUAABZZF879tq9vYS44"},  
+    //     type:"post",   //请求方式
+    //     success:function(req){     
+    //           console.log("请求成功咖啡机总份数");  
+    //           console.log(req);   
+    //           _this.MineCoffNum = req;         
+    //       },
+    //   });
+    // },
     // .......
     //   getOpenid:function(){  
     //   console.log("请求openid");
@@ -133,7 +157,7 @@ export default {
 
   },
   destroyed:function(){
-    localStorage.removeItem('firstTime');
+    localStorage.removeItem('firstTime');//删除本地头像信息
   }
 }
 </script>
@@ -206,12 +230,23 @@ export default {
 }
 .mineList>span:nth-child(1){
   width: 25%;
-  text-align: right;
 }
 .mineList>span:nth-child(2){
   width: 60%;
   text-align: right;
 }
-
-
+.myCofee{
+  background-image: url(../../static/img/coffe.png);
+  background-position: left center; 
+  background-repeat: no-repeat;
+  background-size: 22% 34%;
+  text-indent: 0.8rem;
+}
+.myWallet{
+  background-image: url(../../static/img/wallet.png);
+  background-position: left center; 
+  background-repeat: no-repeat;
+  background-size: 22% 34%;
+  text-indent: 0.5rem;
+}
 </style>

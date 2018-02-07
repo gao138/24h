@@ -10,6 +10,10 @@ import addbank from '@/components/addbank'
 import coffeemachine from '@/components/coffeemachine'
 import mywallet from '@/components/mywallet'
 import verificationbank from '@/components/verificationbank'
+import aboutmine from '@/components/aboutmine'
+import mo from '@/components/mo'
+import vip from '@/components/vip'
+import redenvelopes from '@/components/redenvelopes'
 
 
 Vue.use(Router)
@@ -93,6 +97,37 @@ export default new Router({
         title: '我的'  
       }  
     },
-
+     {
+      path: '/aboutmine',
+      name: 'aboutmine',
+      component: aboutmine,
+       meta: {  
+        title: '关于我们'  
+      }  
+    },
+    {
+      path: '/mo',
+      name: 'mo',
+      component: mo,
+       meta: {  
+        title: '24模式'  
+      }  
+    },
+    {
+      path: '/vip',
+      name: 'vip',
+      component: vip,
+       meta: {  
+        title: '会员商城'  
+      }  
+    },
+    {
+      path: '/redenvelopes',
+      name: 'redenvelopes',
+      component: redenvelopes,
+       meta: {  
+        title: '红包大战'  
+      }  
+    },
   ]
 })
