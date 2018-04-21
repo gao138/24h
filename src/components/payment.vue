@@ -10,7 +10,7 @@
                <div class="saleNum">
                   <div style="border-bottom: 1px solid #DFDFDF;"><span>{{paySchool}}咖啡机</span><span>{{productNum}}份</span></div>
                   <div style="border-bottom: 1px solid #DFDFDF;"><span>金额</span><span>{{payPrice}}/1份</span></div>
-                  <div style="border-bottom: 1px solid #DFDFDF;"><span>月收益</span><span>约150元/1份</span></div>
+                  <div style="border-bottom: 1px solid #DFDFDF;"><span>月收益</span><span>约100元/1份</span></div>
                   <div style="border-bottom: 1px solid #DFDFDF;"><span>购买日期</span><span>{{payTime}}</span></div>
                   <!-- <div style="border-bottom: 1px solid #DFDFDF;"><span>收益日期</span><span>{{profit}}</span></div> -->
                   <!-- <div><span>月收入</span><span>100元起</span></div> -->
@@ -50,7 +50,6 @@
 <script>
 import $ from 'jquery'
 // import wx from 'weixin-js-sdk'
-// import wexinPay from '../weipay.js'
 import apiUrls from '../apiUrls'
 export default {
   name: 'payment',
@@ -83,34 +82,6 @@ export default {
         $(event.target).attr("src",noxuanImg);
         _this.isSelected.isSelected = false;
       }
-    },
-    weixinConfig:function(){
-         var allpayInformation = {
-          "url":window.location.href.split('#')[0],
-          }
-        $.ajax({
-              url:apiUrls['paymentpageConfig'],    //请求的url地址
-              dataType:"json",   //返回格式为json
-              async:true,//请求是否异步，默认为异步，这也是ajax重要特性 
-              data:allpayInformation,  
-              type:"post",   //请求方式
-              success:function(req){
-                  alert(req + '微信config请求成功');
-                  wx.config({
-                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-                    appId: req.appId, // 必填，公众号的唯一标识
-                    timestamp: req.timestamp, // 必填，生成签名的时间戳
-                    nonceStr: req.nonceStr, // 必填，生成签名的随机串
-                    signature: req.signature, // 必填，签名，见附录1
-                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-                  });         
-              },
-              error:function(err){
-                  //请求出错处理
-                  // alert(JSON.stringify(err) + '失败'); 
-              }
-            });
- 
     },
     payOk:function(){
       var _this = this;
@@ -200,11 +171,6 @@ export default {
     // this.openid = 'oYYPb0kX_sUAABZZF879tq9vYS44';
 
     console.log(this.openid);
-    // alert(window.location.href + '111111111');
-    // alert(window.location.href.split('#')[0] + '22222222');
-//.....................
-   // this.weixinConfig();//配置config
-// ......................
   },
   mounted:function(){
     

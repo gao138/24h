@@ -3,8 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueWechatTitle from 'vue-wechat-title';    
-Vue.use(VueWechatTitle) 
+import VueWechatTitle from 'vue-wechat-title';   
+
+Vue.use(VueWechatTitle);
+
 
 Vue.config.productionTip = false
 

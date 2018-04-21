@@ -22,7 +22,7 @@
         <!-- <div><span>收益日期</span><span>{{profit}}</span></div> -->
      </div>
      <div class="prompt">
-          <span>每人限购十个名额哦！<br>可在不同区域的大学分别购买</span>
+          <span></span>
      </div>
      <div class="buyBtn">
       <router-link :to="{path: 'payment', query: { topay:school,price:price,payTime:payTime,numToCont:numberConvertToUppercase()(productNum),num:productNum,detailsRegion:detailsRegion,onlyOneList:onlyOneList,profit:profit,onlyOneListname:onlyOneListname}}">
@@ -60,8 +60,8 @@ export default {
         alert("请选择投放位置");
         return;
       }      
-      if (this.productNum >=10) {
-        this.productNum = 10;
+      if (this.productNum >=200) {
+        this.productNum = 200;
       }else{
         this.productNum++;   
       }

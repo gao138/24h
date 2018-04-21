@@ -16,9 +16,16 @@ export default {
 	minePageCoffNum:"http://ch.jwangkun.com/eh/coffee/getcountmacs.do",
 	// coffeemachinePagw
 	coffeemachinePage:"http://ch.jwangkun.com/eh/coffee/getMachine.do",
-
-
-
+	//mywallet
+	mywalletPage:"http://ch.jwangkun.com/eh/coffee/getMachine.do",
+	money:"http://ch.jwangkun.com/eh/amount/addtotalMoney.do",
+	yue:"http://ch.jwangkun.com/eh/amount/queryamount.do ",
+	//addbank
+	addbank:"http://ch.jwangkun.com/eh/bankAmount/addBankAmount.do",
+	//minebankcard
+	minebankcard:"http://ch.jwangkun.com/eh/bankAmount/searchBankAmount.do",
+	//withdrawals
+	withdrawals:"http://ch.jwangkun.com/eh/reflect/reflectMoney.do"
 //测试
    // homePage:"http://192.168.1.101:8080/eh/area/selectArea.do",
    // homeUniversity:"http://192.168.1.101:8080/eh/unit/selectUnitbyArea.do",
@@ -29,4 +36,7 @@ export default {
 	// 
 	// minePageCoffNum:"http://192.168.1.101:8080/eh/coffee/getcountmacs.do",
 	// coffeemachinePage:"http://192.168.1.101:8080/eh/coffee/getMachine.do",
+//	addbank:"http://192.168.1.101:8080/eh/bankAmount/addBankAmount.do",
+//	minebankcard:"http://192.168.1.101:8080/eh/bankAmount/searchBankAmount.do",
+//	withdrawals:"http://192.168.1.101:8080/eh/reflect/reflectMoney.do"
 }

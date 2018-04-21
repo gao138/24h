@@ -1,6 +1,6 @@
 <template>
   <div id="app" style="height: 100%;">
-          <router-view v-wechat-title="$route.meta.title"></router-view>
+          <router-view v-wechat-title="$route.meta.title" img-set="/static/favicon.png"></router-view>
   </div>
 </template>
 

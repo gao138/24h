@@ -6,11 +6,14 @@
           <!-- <div class="service"><img src="../../static/img/service.png" alt=""><br><span>客服</span></div> -->
       </div>
       <div class="mineLists">
-          <router-link :to="{path:'coffeemachine',query:{openid:mineOpenid}}">
+          <router-link :to="{path:'coffeemachine',query:{}}">
               <div class="mineList"><span class="myCofee">我的咖啡机</span><span>共{{MineCoffNum}}份</span></div>
           </router-link>
-          <router-link to="/mywallet">
+          <router-link :to="{path:'mywallet',query:{}}">
               <div class="mineList"><span class="myWallet">我的钱包</span><span></span></div>
+          </router-link>
+          <router-link :to="{path:'minebankcard',query:{}}">
+              <div class="mineList"><span class="mineBankcard">我的银行卡</span><span></span></div>
           </router-link>
       </div>
   </div>
@@ -65,11 +68,19 @@ export default {
         this.mineOpenid = sessuserInfo.openid;
         this.MineCoffNum = sessuserInfo.cofNum;
     }
-     
+//   
 // ................
 
-    // this.mineOpenid = "oYYPb0kX_sUAABZZF879tq9vYS44";
-    // this.mineAjax();  
+
+//    	var a = {"city":"晋中","cofNum":"4","country":"中国","headimgurl":"http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLApHiabj1ybWUxfAMWweTybvnCxumzSuicXEPIPuEdrN7Mf2AOEvmKD8XEic9uoQiaQ6jlwrSPTwtqSg/132","language":"zh_CN","nickname":"自嘲自讽自逍遥","openid":"oYYPb0kX_sUAABZZF879tq9vYS44","privilege":[],"province":"山西","sex":1};
+//	      sessionStorage.setItem("sessfirstTime",JSON.stringify(a));
+//	      var strsessUserinfo = sessionStorage.getItem("sessfirstTime");
+//      var sessuserInfo = JSON.parse(strsessUserinfo);
+//      this.headimgurl = sessuserInfo.headimgurl;
+//      this.nickname = sessuserInfo.nickname;
+//      this.mineOpenid = sessuserInfo.openid;
+//      this.MineCoffNum = sessuserInfo.cofNum;
+  //
   },
   mounted () {
     
@@ -99,46 +110,6 @@ export default {
           },
       });
     },
-    // getMineCoffNum(openid){
-    //    var _this = this;
-    //    $.ajax({
-    //     url:apiUrls['minePageCoffNum'],    //请求的url地址
-    //     dataType:"json",   //返回格式为json
-    //     async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
-    //     data:{openID:openid},  
-    //     // data:{openID:"oYYPb0kX_sUAABZZF879tq9vYS44"},  
-    //     type:"post",   //请求方式
-    //     success:function(req){     
-    //           console.log("请求成功咖啡机总份数");  
-    //           console.log(req);   
-    //           _this.MineCoffNum = req;         
-    //       },
-    //   });
-    // },
-    // .......
-    //   getOpenid:function(){  
-    //   console.log("请求openid");
-    //   var _this = this;
-    //   var code = {'code':this.code}
-    //   $.ajax({
-    //   url:apiUrls['homeGetopenid'],
-    //   async:true,//请求是否异步，默认为异步，这也是ajax重要特性 
-    //   type:"post",     //请求方式
-    //   data:code,
-    //   success:function(req){
-    //       //请求成功时处理
-    //        _this.mineOpenid = req.openid;        
-    //        localStorage.setItem("openid",_this.mineOpenid);//存openid  
-    //        // mineAjax
-    //       console.log('openid是local' + localStorage.getItem("openid"));
-    //   },
-    //   error:function(err){
-    //       //请求出错处理
-    //       console.log('失败' + JSON.stringify(err));
-
-    //   }
-    //   });
-    // },
 // .................
       parseQueryString:function (url) {  //url 转为对象
           var reg_url = /^[^\?]+\?([\w\W]+)$/,
@@ -248,5 +219,12 @@ export default {
   background-repeat: no-repeat;
   background-size: 22% 34%;
   text-indent: 0.5rem;
+}
+.mineBankcard{
+	background-image: url(../../static/img/bankcard.png);
+  background-position: 3% center; 
+  background-repeat: no-repeat;
+  background-size: 16% 32%;
+  text-indent: 0.8rem;
 }
 </style>

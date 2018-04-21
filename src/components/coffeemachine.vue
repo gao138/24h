@@ -47,7 +47,8 @@ export default {
     },
   },
   created:function(){
-     this.coffeemachineOpenid = this.$route.query.openid;//路径拿oenid
+  	 var strsessUserinfo = sessionStorage.getItem("sessfirstTime");
+     this.coffeemachineOpenid = JSON.parse(strsessUserinfo).openid;//路径拿oenid
      // console.log("coffeemachineOpenid是" + this.coffeemachineOpenid);
      this.coffeemachineAjax(this.coffeemachineOpenid);
   },
@@ -73,7 +74,7 @@ export default {
    .order .line {  
      display: inline-block;  
      width: 14.7%;  
-     border-top: 1px solid #7B7D5C; ;  
+     border-top: 1px solid #7B7D5C;
   }  
   .order .txt {  
      vertical-align: middle;  

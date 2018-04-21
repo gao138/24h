@@ -47,21 +47,6 @@
   </div>
 </template>
 <script>
-// var allArea =  [
-//           {positions:'top:35.4%;left:12.9%',title:"",way:true},
-//           {positions:'top:2.9%;left:24.4%',title:"",way:true},
-//           {positions:'top:7.9%;left:55%',title:"",way:false},
-//           {positions:'top:82.9%;left:14.7%',title:"",way:false},
-//           {positions:'top:37.9%;left:61.7%',title:"",way:false},
-//           {positions:'top:95.9%;left:52.7%',title:"",way:false},
-//           {positions:'top:77.9%;left:86.7%',title:"",way:false},
-//           {positions:'top:23.9%;left:93%',title:"",way:true},
-//           {positions:'top:8.9%;left:72.7%',title:"",way:true},
-//           {positions:'top:34.9%;left:84.7%',title:"",way:false},
-//           {positions:'top:67.9%;left:49%',title:"",way:false},
-//           {positions:'top:40.9%;left:25.7%',title:"",way:false},
-//           {positions:'top:-3.1%;left:50%',title:"",way:true},
-//         ];
 import $ from 'jquery'
 import apiUrls from '../apiUrls'
 export default {
