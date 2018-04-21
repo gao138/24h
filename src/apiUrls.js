@@ -2,8 +2,8 @@
 
 export default {
 	//home页面
-	homePage:"http://ch.jwangkun.com/eh/area/selectArea.do",
-	homeUniversity:"http://ch.jwangkun.com/eh/unit/selectUnitbyArea.do",
+//	homePage:"http://ch.jwangkun.com/eh/area/selectArea.do",
+//	homeUniversity:"http://ch.jwangkun.com/eh/unit/selectUnitbyArea.do",
 	homeGetopenid:'http://ch.jwangkun.com/eh/ycb/wxpay/openid.do',//home页面获取openid
 	//details页面
 	detailsPage:"http://ch.jwangkun.com/eh/machine/queryUnitMat.do",
@@ -25,10 +25,10 @@ export default {
 	//minebankcard
 	minebankcard:"http://ch.jwangkun.com/eh/bankAmount/searchBankAmount.do",
 	//withdrawals
-	withdrawals:"http://ch.jwangkun.com/eh/reflect/reflectMoney.do"
+	withdrawals:"http://ch.jwangkun.com/eh/reflect/reflectMoney.do",
 //测试
-   // homePage:"http://192.168.1.101:8080/eh/area/selectArea.do",
-   // homeUniversity:"http://192.168.1.101:8080/eh/unit/selectUnitbyArea.do",
+      homePage:"http://192.168.1.102:8080/eh/area/selectArea.do",
+//    homeUniversity:"http://192.168.1.101:8080/eh/unit/selectUnitbyArea.do",
 	// minePage
 	// minePage:"http://192.168.1.101:8080/eh/wx/getUserInfo.do",
 	// minePageNum:"http://192.168.1.101:8080/eh/coffee/getcountmacs.do",

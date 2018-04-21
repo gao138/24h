@@ -49,6 +49,8 @@
 <script>
 import $ from 'jquery'
 import apiUrls from '../apiUrls'
+//import Loading from 'components/loading'
+
 export default {
   name: 'home',
   data () {
@@ -61,9 +63,9 @@ export default {
       openid:"",
     }
   },
-  beforeCreate: function () {
-  
-  },
+	components: {
+//		Loading
+	},
   methods:{
     tab(event,areaNum,item){
      if ($(event.target).parent()[0].className === "headtab"){
@@ -81,35 +83,15 @@ export default {
         }
       })
       this.getalbumpic_big(this.headList);
+      
       this.region = item['name']; 
+      console.log(areaNum);
       this.gethomeUniversity(this.region);//tab切换显示点
      }    
     }, 
     jump:function(t){
         // to-details
       this.$router.push({path:"/details",query:{title:t,region:this.region}})
-    },
-    // 随机不重复数组
-    getRandomArray(arrLength,ranNum){
-          var array = [];
-          while (array.length < arrLength)
-          {
-              var random = Math.floor(Math.random() * ranNum) + 1;
-              if (array.indexOf(random) < 0)
-              {
-                  array.push(random);
-              }
-          }
-          return array;
-      },
-    // 放点
-    setSpot:function(ranArr,index){
-      var arr = [];
-      for (var i = 0; i < ranArr.length; i++) {
-        allArea[ranArr[i]]['title'] = this.headList[index]['list'][i]['name'];
-        arr.push(allArea[ranArr[i]]); 
-      }
-      return arr;
     },
     createdcss:function(){//初始样式
       $(".swiper-slide").eq(0).css("background","#EFDCBB");
@@ -153,23 +135,7 @@ export default {
           return ret;
     },
     gethomeUniversity:function(areaName){
-          var _this = this;
-          $.ajax({
-            url:apiUrls['homeUniversity'], //请求的url地址
-            dataType:"json",   //返回格式为json
-            async:false,//请求是否异步，默认为异步，这也是ajax重要特性 
-            type:"post",   //请求方式
-            data:{name:areaName},
-            success:function(req){
-              console.log("gethomeUniversity下面");
-              console.log(req);
-              _this.areaList = req;
-              _this.getalbumpic_big(req);
-            },
-            error:function(){
-                //请求出错处理
-            }
-          });
+          console.log(areaName);
     },
     getalbumpic_big:function(item){
       if (item.length > 7) {
@@ -187,12 +153,10 @@ export default {
       type:"post",   //请求方式
       success:function(req){
           //请求成功时处理
-          console.log(req);    
-          _this.headList = req;  
-          _this.region = req[0]['name'];
-          //初始化学校显示
-          // _this.areaList = _this.setSpot(_this.getRandomArray(_this.headList[0]['list'].length,allArea.length-1),0);  
-          //head轮播的长度 
+          console.log(JSON.parse(req.info));    
+        	_this.headList = JSON.parse(req.info);
+          _this.region = _this.headList['name'];
+           //head轮播的长度 
           var headNum =  0;
           if (_this.headList.length >= 5) {
             headNum = 5;
@@ -207,9 +171,13 @@ export default {
               })
               _this.createdcss();//初始化样式
           },100);
-
-           // _this.region = _this.headList[0]['name']; //初始化地区
-      }
+          
+          var unversityStr = JSON.parse(req.info)[0].unversity;//
+          console.log(unversityStr);
+          _this.areaList = JSON.parse(unversityStr);
+          console.log(_this.areaList);
+					console.log(_this.areaList[0]['location']);
+      }	
       });
     }
   },
@@ -218,31 +186,31 @@ export default {
   　　 // 使用方法：url转为对象
       var url = window.location.href.split('#')[0];
       var obj = this.parseQueryString(url);
-      if (!obj.code) {
-        console.log('没code');
-         var appid="wx88cb890e1e079473";
-         var redirect_uri=encodeURIComponent("http://ch.jwangkun.com/24h/#/home");//这里的地址需要http://
-         var wurl='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+ appid +'&redirect_uri='+ redirect_uri +'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';          
-         window.location.href=wurl;
-         return;
-      }else{
-          console.log("有code");
-          this.code = obj.code;
-          if (sessionStorage.getItem("ishasCode") == "ok") {//有
-              console.log('有session');
-              console.log("session是" + sessionStorage.getItem("ishasCode"));
-               this.openid = localStorage.getItem("openid");
-               this.$ajaxjson(); 
-               this.gethomeUniversity(this.region);     
-          }else{//没有
-            console.log('没有session');
-            console.log("session是" + sessionStorage.getItem("ishasCode"));
-            sessionStorage.setItem('ishasCode','ok')  
-               this.getOpenid();//获取openid  
+//    if (!obj.code) {
+//      console.log('没code');
+//       var appid="wx88cb890e1e079473";
+//       var redirect_uri=encodeURIComponent("http://ch.jwangkun.com/24h/#/home");//这里的地址需要http://
+//       var wurl='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+ appid +'&redirect_uri='+ redirect_uri +'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';          
+//       window.location.href=wurl;
+//       return;
+//    }else{
+//        console.log("有code");
+//        this.code = obj.code;
+//        if (sessionStorage.getItem("ishasCode") == "ok") {//有
+//            console.log('有session');
+//            console.log("session是" + sessionStorage.getItem("ishasCode"));
+//             this.openid = localStorage.getItem("openid");
+//             this.$ajaxjson(); 
+//             this.gethomeUniversity(this.region);     
+//        }else{//没有
+//          console.log('没有session');
+//          console.log("session是" + sessionStorage.getItem("ishasCode"));
+//          sessionStorage.setItem('ishasCode','ok')  
+//             this.getOpenid();//获取openid  
                this.$ajaxjson();   
-               this.gethomeUniversity(this.region);      
-          };        
-      };     
+//             this.gethomeUniversity(this.region);     / 
+//        };        
+//    };     
   },	
   mounted(){
        // 请求home头部数据
